@@ -1,0 +1,4 @@
+services:
+  ultimate_lexparser.parser:
+    class: Drupal\ultimate_lexparser\ParserService
+    arguments: []
