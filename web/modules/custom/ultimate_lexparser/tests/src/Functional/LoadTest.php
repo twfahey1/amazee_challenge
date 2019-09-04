@@ -41,6 +41,16 @@ class LoadTest extends BrowserTestBase {
   public function testLoad() {
     $this->drupalGet(Url::fromRoute('<front>'));
     $this->assertSession()->statusCodeEquals(200);
+
+    // Create a content type with the LexParser Field Type.
+
+    // Create an instance of the content type, with a basic formula in the field.
+
+    // Confirm output is correct.
+
+    // Go back and edit the content type to a new formula.
+
+    // Confirm output is correct.
   }
 
 }
