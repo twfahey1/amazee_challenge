@@ -1,0 +1,5 @@
+name: 'ultimate_lexparser'
+type: module
+description: 'Provides the ultimate in Lexer & Parser technology.'
+core: 8.x
+package: 'Custom'

@@ -1,0 +1,14 @@
+{
+  "name": "drupal/ultimate_lexparser",
+  "type": "drupal-module",
+  "description": "Provides the ultimate in Lexer & Parser technology.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/ultimate_lexparser",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/ultimate_lexparser",
+    "source": "http://cgit.drupalcode.org/ultimate_lexparser"
+  },
+  "require": { }
+}
