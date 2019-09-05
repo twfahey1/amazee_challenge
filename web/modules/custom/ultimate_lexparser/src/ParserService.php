@@ -2,6 +2,7 @@
 
 namespace Drupal\ultimate_lexparser;
 
+use Exception;
 use FormulaParser\FormulaParser;
 
 /**
@@ -34,9 +35,15 @@ class ParserService implements ParserServiceInterface {
    */
   public function calculate($formula, $precision) {
     $parser = new FormulaParser($formula, $precision);
-    $parser->setVariables(['x' => -4, 'y' => 8]);
-    $result = $parser->getResult(); // [0 => 'done', 1 => 16.38]
-    return $result[1];
+    $resultData = $parser->getResult();
+    // Result state can indicate error.
+    $resultState = $resultData[0];
+    // The computed result, or an error message.
+    $resultComputed = $resultData[1];
+    if ($resultState === 'error') {
+      throw new Exception("Error in parse: " . $resultComputed);
+    }
+    return $resultComputed;
   }
 
 }

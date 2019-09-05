@@ -11,6 +11,7 @@ use Drupal\ultimate_lexparser\ParserService;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\field\Entity\FieldConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Logger\LoggerChannelFactory;
 
 /**
  * Plugin implementation of the 'lex_parser_field_formatter' formatter.
@@ -33,6 +34,13 @@ class LexParserFieldFormatter extends FormatterBase implements ContainerFactoryP
   public $parserService;
 
   /**
+   * The logger service.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactory
+   */
+  protected $logger;
+
+  /**
    * Constructs a FormatterBase object.
    *
    * @param string $plugin_id
@@ -51,10 +59,13 @@ class LexParserFieldFormatter extends FormatterBase implements ContainerFactoryP
    *   Any third party settings.
    * @param \Drupal\ultimate_lexparser\ParserService $parser_service
    *   The ultimate LexParser parser service.
+   * @param \Drupal\Core\Logger\LoggerChannelFactory $logger
+   *   The Drupal core logger service.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldConfig $field_definition, array $settings, $label, $view_mode, array $third_party_settings, ParserService $parser_service) {
+  public function __construct($plugin_id, $plugin_definition, FieldConfig $field_definition, array $settings, $label, $view_mode, array $third_party_settings, ParserService $parser_service, LoggerChannelFactory $logger) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->parserService = $parser_service;
+    $this->logger = $logger->get('ultimate_lexparser');
   }
 
   /**
@@ -69,7 +80,8 @@ class LexParserFieldFormatter extends FormatterBase implements ContainerFactoryP
       $configuration['label'],
       $configuration['view_mode'],
       $configuration['third_party_settings'],
-      $container->get('ultimate_lexparser.parser')
+      $container->get('ultimate_lexparser.parser'),
+      $container->get('logger.factory')
     );
   }
 
@@ -135,7 +147,9 @@ class LexParserFieldFormatter extends FormatterBase implements ContainerFactoryP
       $result = $this->parserService->calculate($formula, $precision);
     }
     catch (\Exception $e) {
-      $result = $e->getMessage();
+      // Don't expose error to front end, log it and display generic error.
+      $result = "Error in parsing field. Please see error logs.";
+      $this->logger->warning($e->getMessage());
     }
     return nl2br(Html::escape($result));
   }
