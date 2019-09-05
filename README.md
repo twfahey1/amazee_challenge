@@ -1,3 +1,31 @@
+# Amazee Challenge!
+
+Welcome to the Amazee Challenge repo, taken on by Tyler Fahey!
+
+## Quickstart: How to evaluate my solution
+* Enable the `ultimate_lexparser_example` module. This includes a sample content type that makes evaluation quick and easy.
+* Go to `/node/add/flexparser_example_page`, and provide any title, and any formula in the "Example Text Parser Field".
+* Save the node, and you should see the computed formula on the rendered node.
+
+## Overview
+The challenge states the following:
+>1.	The Parser needs to be able to compute simple mathematical operations using the most basic operators (+, -, *, /) without using eval().
+	for example: “10 + 20 - 30 + 15 * 5” should return 75.
+>2.	Make sure you take care of operator precedence using infix notation.
+>3.	Provide a field formatter plugin in a Drupal 8 module that uses this Service.
+>4.	Deliver the work as a Drupal 8 site with the custom module in a git repository.
+
+I've accomplished this via a custom module: `ultimate_lexparser`. This module defines a service, `ultimate_lexparser.parser`, that is instantiated via dependency injection in a custom field formatter, `LexParserFieldFormatter`. This field formatter can be applied on any `string` based field, and leverages the `denissimon/formula-parser` package to do the computation.
+
+## Notes/considerations
+In considering this challenge, my mind first went towards how I would go about parsing the data. After some reflection, it occurred to me that this certainly must be a wheel already invented, and that if I could grab it as a composer package to integrate with Drupal, much of my work would be complete! Sure enough, the ["denissimon/formula-parser" package](https://github.com/denissimon/formula-parser) appeared to be a perfect fit for the job!
+
+## BONUS: Provide a simple unit test
+Assuming usage of the Lagoon environment, the test can be easily executed via the `./test-lex.sh` script, included in the docroot of this repo. The test itself is located in the `ultimate_lexparser` module. The test leverages an `@dataProvider` to easily validate several formulas against the `ultimate_lexparser.parser` service.
+
+---
+# ORIGINAL DOCS FOR REFERENCE:
+
 # Composer template for Drupal projects hosted on amazee.io
 
 This project template should provide a kickstart for managing your site
