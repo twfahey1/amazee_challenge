@@ -7,6 +7,7 @@ use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
+use FormulaParser\FormulaParser;
 
 /**
  * Plugin implementation of the 'lex_parser_field_formatter' formatter.
@@ -26,7 +27,7 @@ class LexParserFieldFormatter extends FormatterBase {
    */
   public static function defaultSettings() {
     return [
-      // Implement default settings.
+      'precision' => '2',
     ] + parent::defaultSettings();
   }
 
@@ -35,7 +36,11 @@ class LexParserFieldFormatter extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     return [
-      // Implement settings form.
+      'precision' => [
+        '#type' => 'textfield',
+        '#title' => 'Precision',
+        '#description' => 'Provide the level of precision to be calculated.',
+      ],
     ] + parent::settingsForm($form, $form_state);
   }
 
@@ -74,7 +79,18 @@ class LexParserFieldFormatter extends FormatterBase {
   protected function viewValue(FieldItemInterface $item) {
     // The text value has no text format assigned to it, so the user input
     // should equal the output, including newlines.
-    return nl2br(Html::escape($item->value));
+    $formula = $item->value;
+    $precision = 2; // Number of digits after the decimal point
+    // TODO: Wire up precision to formatter settings.
+    try {
+      $parser = new FormulaParser($formula, $precision);
+      $parser->setVariables(['x' => -4, 'y' => 8]);
+      $result = $parser->getResult(); // [0 => 'done', 1 => 16.38]
+    }
+    catch (\Exception $e) {
+      $result = $e->getMessage();
+    }
+    return nl2br(Html::escape($result[1]));
   }
 
 }

@@ -10,5 +10,7 @@
     "issues": "https://www.drupal.org/project/issues/ultimate_lexparser",
     "source": "http://cgit.drupalcode.org/ultimate_lexparser"
   },
-  "require": { }
+  "require": {
+    "denissimon/formula-parser": "2.6.1"
+  }
 }
