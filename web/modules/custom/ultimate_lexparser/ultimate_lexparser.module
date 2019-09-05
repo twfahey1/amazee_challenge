@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Contains ultimate_lexparser.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function ultimate_lexparser_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the ultimate_lexparser module.
+    case 'help.page.ultimate_lexparser':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides the ultimate in Lexer &amp; Parser technology.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function ultimate_lexparser_theme() {
+  return [
+    'ultimate_lexparser' => [
+      'render element' => 'children',
+    ],
+  ];
+}

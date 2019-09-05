@@ -1,0 +1,10 @@
+name: 'Ultimate LexParser Example'
+type: module
+core: 8.x
+dependencies:
+  - field
+  - menu_ui
+  - node
+  - path
+  - ultimate_lexparser
+  - user

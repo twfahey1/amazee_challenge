@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.flexparser_example_page.field_example_text_parser_field
+    - node.type.flexparser_example_page
+  module:
+    - ultimate_lexparser
+    - user
+id: node.flexparser_example_page.default
+targetEntityType: node
+bundle: flexparser_example_page
+mode: default
+content:
+  field_example_text_parser_field:
+    weight: 101
+    label: above
+    settings:
+      precision: '2'
+    third_party_settings: {  }
+    type: lex_parser_field_formatter
+    region: content
+  links:
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  display_breadcrumbs: true
+  display_page_title: true
