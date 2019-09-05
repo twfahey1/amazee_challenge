@@ -3,7 +3,9 @@
 Welcome to the Amazee Challenge repo, taken on by Tyler Fahey!
 
 ## Quickstart: How to evaluate my solution
-* Enable the `ultimate_lexparser_example` module. This includes a sample content type that makes evaluation quick and easy.
+* Since this is based on the [Composer template from Amazee](https://github.com/amazeeio/drupal-example), the standard setup instructions should suffice for getting the environment setup locally.
+* Run `docker-compose exec cli drush en ultimate_lexparser_example -y` - This will enable the `ultimate_lexparser_example` module. This includes a sample content type that makes evaluation quick and easy, as well as enabling the base `ultimate_lexparser` module.
+* Login as an admin - `docker-compose exec cli drush uli --uri=http://drupal-example.docker.amazee.io`
 * Go to `/node/add/flexparser_example_page`, and provide any title, and any formula in the "Example Text Parser Field".
 * Save the node, and you should see the computed formula on the rendered node.
 
@@ -17,11 +19,14 @@ The challenge states the following:
 
 I've accomplished this via a custom module: `ultimate_lexparser`. This module defines a service, `ultimate_lexparser.parser`, that is instantiated via dependency injection in a custom field formatter, `LexParserFieldFormatter`. This field formatter can be applied on any `string` based field, and leverages the `denissimon/formula-parser` package to do the computation.
 
-## Notes/considerations
+### Notes/considerations
 In considering this challenge, my mind first went towards how I would go about parsing the data. After some reflection, it occurred to me that this certainly must be a wheel already invented, and that if I could grab it as a composer package to integrate with Drupal, much of my work would be complete! Sure enough, the ["denissimon/formula-parser" package](https://github.com/denissimon/formula-parser) appeared to be a perfect fit for the job!
 
 ## BONUS: Provide a simple unit test
 Assuming usage of the Lagoon environment, the test can be easily executed via the `./test-lex.sh` script, included in the docroot of this repo. The test itself is located in the `ultimate_lexparser` module. The test leverages an `@dataProvider` to easily validate several formulas against the `ultimate_lexparser.parser` service.
+
+## The other bonus challenges
+As of right now, I have not yet added the GraphQL or frontend integration bonuses.
 
 ---
 # ORIGINAL DOCS FOR REFERENCE:
