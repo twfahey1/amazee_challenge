@@ -1,0 +1,7 @@
+field.formatter.settings.lex_parser_field_formatter:
+  type: mapping
+  label: 'Lex Parser Field Formatter settings'
+  mapping:
+    precision:
+      type: string
+      label: 'Precision'

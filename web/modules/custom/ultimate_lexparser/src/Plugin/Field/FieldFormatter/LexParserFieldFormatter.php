@@ -103,6 +103,7 @@ class LexParserFieldFormatter extends FormatterBase implements ContainerFactoryP
         '#type' => 'textfield',
         '#title' => 'Precision',
         '#description' => 'Provide the level of precision to be calculated.',
+        '#default_value' => $this->getSetting('precision'),
       ],
     ] + parent::settingsForm($form, $form_state);
   }
@@ -141,8 +142,7 @@ class LexParserFieldFormatter extends FormatterBase implements ContainerFactoryP
    */
   protected function viewValue(FieldItemInterface $item) {
     $formula = $item->value;
-    $precision = 2;
-    // TODO: Wire up precision to formatter settings.
+    $precision = $this->getSetting('precision');
     try {
       $result = $this->parserService->calculate($formula, $precision);
     }
