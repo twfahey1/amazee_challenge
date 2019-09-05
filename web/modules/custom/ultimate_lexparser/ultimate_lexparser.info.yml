@@ -1,4 +1,4 @@
-name: 'ultimate_lexparser'
+name: 'Ultimate LexParser'
 type: module
 description: 'Provides the ultimate in Lexer & Parser technology.'
 core: 8.x
