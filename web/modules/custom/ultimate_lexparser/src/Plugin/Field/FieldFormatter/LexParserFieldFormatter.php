@@ -7,7 +7,10 @@ use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
-use FormulaParser\FormulaParser;
+use Drupal\ultimate_lexparser\ParserService;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\field\Entity\FieldConfig;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'lex_parser_field_formatter' formatter.
@@ -20,7 +23,55 @@ use FormulaParser\FormulaParser;
  *   }
  * )
  */
-class LexParserFieldFormatter extends FormatterBase {
+class LexParserFieldFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The parser service.
+   *
+   * @var \Drupal\ultimate_lexparser\ParserService
+   */
+  public $parserService;
+
+  /**
+   * Constructs a FormatterBase object.
+   *
+   * @param string $plugin_id
+   *   The plugin_id for the formatter.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\field\Entity\FieldConfig $field_definition
+   *   The definition of the field to which the formatter is associated.
+   * @param array $settings
+   *   The formatter settings.
+   * @param string $label
+   *   The formatter label display setting.
+   * @param string $view_mode
+   *   The view mode.
+   * @param array $third_party_settings
+   *   Any third party settings.
+   * @param \Drupal\ultimate_lexparser\ParserService $parser_service
+   *   The ultimate LexParser parser service.
+   */
+  public function __construct($plugin_id, $plugin_definition, FieldConfig $field_definition, array $settings, $label, $view_mode, array $third_party_settings, ParserService $parser_service) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
+    $this->parserService = $parser_service;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['label'],
+      $configuration['view_mode'],
+      $configuration['third_party_settings'],
+      $container->get('ultimate_lexparser.parser')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -77,20 +128,16 @@ class LexParserFieldFormatter extends FormatterBase {
    *   The textual output generated.
    */
   protected function viewValue(FieldItemInterface $item) {
-    // The text value has no text format assigned to it, so the user input
-    // should equal the output, including newlines.
     $formula = $item->value;
-    $precision = 2; // Number of digits after the decimal point
+    $precision = 2;
     // TODO: Wire up precision to formatter settings.
     try {
-      $parser = new FormulaParser($formula, $precision);
-      $parser->setVariables(['x' => -4, 'y' => 8]);
-      $result = $parser->getResult(); // [0 => 'done', 1 => 16.38]
+      $result = $this->parserService->calculate($formula, $precision);
     }
     catch (\Exception $e) {
       $result = $e->getMessage();
     }
-    return nl2br(Html::escape($result[1]));
+    return nl2br(Html::escape($result));
   }
 
 }
